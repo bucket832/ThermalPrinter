@@ -2,13 +2,16 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include "secrets.h"
 // Wi-Fi credentials
 
 
-// const char* ssid = "Brick";
-// const char* password = "potato123";
+const char* ssid = SSID;
+const char* password = PASSWORD;
 
 void setup() {
+    Serial.print(SSID);
+    Serial.print(password);
     Serial.begin(115200);
     delay(1000);
 
@@ -40,6 +43,24 @@ void setup() {
 
     Serial.println();
     Serial.println("Starting connection...");
+
+    WiFi.onStationModeConnected([](const WiFiEventStationModeConnected& event) {
+        Serial.println("EVENT: Connected to AP");
+    });
+
+    WiFi.onStationModeDisconnected([](const WiFiEventStationModeDisconnected& event) {
+        Serial.printf("EVENT: Disconnected, reason=%d\n", event.reason);
+    });
+
+    WiFi.onStationModeGotIP([](const WiFiEventStationModeGotIP& event) {
+        Serial.println("EVENT: Got IP");
+    });
+
+    WiFi.onStationModeDisconnected(
+        [](const WiFiEventStationModeDisconnected& event) {
+            Serial.printf("DISCONNECTED: reason=%d\n", event.reason);
+        }
+    );
 
     WiFi.begin(ssid, password);
 
