@@ -8,6 +8,7 @@
 
 const char* ssid = SSID;
 const char* password = PASSWORD;
+String url = URL;
 
 void setup() {
     Serial.print(SSID);
@@ -98,7 +99,7 @@ void setup() {
     WiFiClient client;
     HTTPClient http;
 
-    String url = "http://192.168.1.206:8000/output.txt";
+    
 
     if (http.begin(client, url)) {
         int httpCode = http.GET();
