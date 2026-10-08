@@ -27,7 +27,5 @@ server = HTTPServer(("0.0.0.0", PORT), Handler)
 
 print(f"Serving files on http://0.0.0.0:{PORT}")
 
-with open("server/output/output", "rb") as f:
-    pass
 server.serve_forever()
 
