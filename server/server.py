@@ -10,7 +10,7 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         try:
-            with open("server/output" + self.path, "rb") as f:
+            with open("output" + self.path, "rb") as f:
                 data = f.read()
 
             self.send_response(200)
