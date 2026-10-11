@@ -7,7 +7,7 @@ services:
   scheduler:
     image: mcuadros/ofelia:latest
     depends_on:
-      - web-server
+      - file-server
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: daemon --job-local
