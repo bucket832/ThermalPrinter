@@ -1,6 +1,6 @@
-from server.src.collectors.icalendar_collector import get_events_on_date
-from server.src.collectors.task_collector import collect_tasks
-from server.src.collectors.weather_forecast import get_daily_forecast
+from collectors.icalendar_collector import get_events_on_date
+# from collectors.task_collector import collect_tasks
+from collectors.weather_forecast import get_daily_forecast
 # import utils.output_processing as op
 
 
@@ -41,22 +41,22 @@ for event in events:
 
 
 
-task_paths = [r"/Users/kevinsebastian/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian_Vault/"]
+# task_paths = [r"/Users/kevinsebastian/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian_Vault/"]
 
-tasks = collect_tasks(
-    task_paths,
-    priorities=None,
-    scheduled_before=DATE,
-)
+# tasks = collect_tasks(
+#     task_paths,
+#     priorities=None,
+#     scheduled_before=DATE,
+# )
 
-for task in tasks:
-    output = stringPrint(output, "")
-    due = f"Due: {task.due_date}" if task.due_date else ""
-    priority = task.priority
-    output = stringPrint(output, 
-        f"{str(task.file).split("/")[-1].rstrip(".md")}: "
-        f"{task.text} [{priority}] {due}"
-    )
+# for task in tasks:
+#     output = stringPrint(output, "")
+#     due = f"Due: {task.due_date}" if task.due_date else ""
+#     priority = task.priority
+#     output = stringPrint(output, 
+#         f"{str(task.file).split("/")[-1].rstrip(".md")}: "
+#         f"{task.text} [{priority}] {due}"
+#     )
 
 
 
@@ -69,8 +69,6 @@ output_file = "output/output"
 with open(output_file, "wb") as f:
     f.write(bytes(output, 'utf-8'))
 
-#with open(output_file, "rb") as f:
-    #op.printBytes(f.read())
 
 
 

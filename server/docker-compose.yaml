@@ -4,3 +4,14 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000" 
+  scheduler:
+    image: mcuadros/ofelia:latest
+    depends_on:
+      - web-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: daemon --job-local
+    labels:
+      - "ofelia.job-exec.update-files.schedule=0 3 * * *"
+      - "ofelia.job-exec.update-files.container=your-project_web-server_1"
+      - "ofelia.job-exec.update-files.command=python3 src/build_output.py"

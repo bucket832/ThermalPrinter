@@ -1,0 +1,4 @@
+requests
+dotenv
+icalendar
+recurring_ical_events
