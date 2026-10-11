@@ -10,7 +10,7 @@ services:
       - file-server
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    command: daemon
+    command: daemon --docker
     labels:
       - "ofelia.job-exec.update-files.schedule=0 3 * * *"
       - "ofelia.job-exec.update-files.container=server-file-server-1"
