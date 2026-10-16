@@ -2,7 +2,6 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 PORT = 8000
 
-
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.path.startswith("/output"):
@@ -15,8 +14,9 @@ class Handler(BaseHTTPRequestHandler):
 
             self.send_response(200)
             self.send_header("Content-Type", "application/octet-stream")
+            self.send_header("Next-Checkin", "10000")
             self.send_header("Content-Length", str(len(data)))
-            self.send_header("Content-Disposition", 'attachment; filename="app.bin"')
+            self.send_header("Content-Disposition", 'attachment; filename="output"')
             self.end_headers()
             self.wfile.write(data)
 

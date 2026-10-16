@@ -1,5 +1,7 @@
 secrets.h
 
+server/output/
+
 # platfor.ini stuff
 .pio
 .vscode/.browse.c_cpp.db*

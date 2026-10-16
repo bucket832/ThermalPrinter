@@ -1,8 +1,10 @@
 from collectors.icalendar_collector import get_events_on_date
 # from collectors.task_collector import collect_tasks
-from collectors.weather_forecast import get_daily_forecast
+from collectors.weather_forecast import get_weather_summary
 # import utils.output_processing as op
-
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 
 
@@ -21,7 +23,9 @@ DATE = date.today()
 
 
 output = stringPrint(output, DATE.strftime("%A, %B %C"))
-output = stringPrint(output=output, ending=get_daily_forecast())
+lat = float(os.getenv("LATITUDE"))
+lon = float(os.getenv("LONGITUDE"))
+output = stringPrint(output=output, ending=get_weather_summary(lat, lon))
 
 
 

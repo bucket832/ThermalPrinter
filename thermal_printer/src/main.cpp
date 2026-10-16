@@ -3,6 +3,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include "secrets.h"
+#include <string>
 // Wi-Fi credentials
 
 
@@ -10,12 +11,7 @@ const char* ssid = SSID;
 const char* password = PASSWORD;
 String url = URL;
 
-void setup() {
-    Serial.print(SSID);
-    Serial.print(password);
-    Serial.begin(115200);
-    delay(1000);
-
+void setupWifi() {
     Serial.println();
     Serial.println("=== ESP8266 WiFi test ===");
 
@@ -43,7 +39,7 @@ void setup() {
     }
 
     Serial.println();
-    Serial.println("Starting connection...");
+    // Serial.println("Starting connection...");
 
     WiFi.onStationModeConnected([](const WiFiEventStationModeConnected& event) {
         Serial.println("EVENT: Connected to AP");
@@ -96,19 +92,43 @@ void setup() {
             WiFi.status()
         );
     }
+}
+
+
+void setup() {
+    Serial.begin(115200);
+    Serial1.begin(9600);
+    delay(1000);
+
+    setupWifi();
     WiFiClient client;
     HTTPClient http;
 
-    
-
+    const char* target_header = "Next-Checkin";    
+    const char* headerKeys[] = {target_header};
     if (http.begin(client, url)) {
+        http.collectHeaders(headerKeys, 1);
         int httpCode = http.GET();
 
         if (httpCode > 0) {
             Serial.printf("HTTP response: %d\n", httpCode);
-
+            if (http.hasHeader(target_header)) {
+                String nextCheckinVal = http.header(target_header);
+                Serial.printf("Next-Checkin value: %s\n", nextCheckinVal.c_str());
+                int numVal = atoi(nextCheckinVal.c_str());
+                if (numVal != 0) {
+                    Serial.printf("It Worked !! %d !\n", numVal);
+                } else {
+                    Serial.printf("Cast Failed\n");
+                }
+            } else {
+                Serial.println("Header not found!");
+            }
             String payload = http.getString();
             Serial.println(payload);
+            Serial1.print("\n----------------------------\n\n");
+            Serial1.print(payload);
+            Serial1.print("\n\n\n");
         } else {
             Serial.printf("HTTP request failed: %s\n",
                           http.errorToString(httpCode).c_str());
@@ -117,6 +137,7 @@ void setup() {
         http.end();
     }
 }
+
 
 void loop() {
 }
