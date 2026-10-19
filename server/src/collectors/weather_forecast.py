@@ -74,8 +74,8 @@ def get_weather_summary(latitude, longitude):
     condition = WEATHER_CODES.get(code, "Mixed conditions")
 
     parts = [
-        f"{condition} today",
-        f"high of {high:.0f}-F and low of {low:.0f}^F",
+        f"{condition}",
+        f"high of {high:.0f}-F and low of {low:.0f}-F",
     ]
 
     if rain_chance is not None:
