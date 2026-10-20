@@ -1,5 +1,5 @@
 from collectors.icalendar_collector import get_events_on_date
-# from collectors.task_collector import collect_tasks
+from collectors.task_collector import collect_tasks
 from collectors.weather_forecast import get_weather_summary
 # import utils.output_processing as op
 from dotenv import load_dotenv
@@ -44,23 +44,23 @@ for event in events:
 
 
 
+ObsidianPath = os.getenv("OBS")
+task_paths = [ObsidianPath]
 
-# task_paths = [r"/Users/kevinsebastian/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian_Vault/"]
+tasks = collect_tasks(
+    task_paths,
+    priorities=None,
+    scheduled_on=DATE,
+)
 
-# tasks = collect_tasks(
-#     task_paths,
-#     priorities=None,
-#     scheduled_before=DATE,
-# )
-
-# for task in tasks:
-#     output = stringPrint(output, "")
-#     due = f"Due: {task.due_date}" if task.due_date else ""
-#     priority = task.priority
-#     output = stringPrint(output, 
-#         f"{str(task.file).split("/")[-1].rstrip(".md")}: "
-#         f"{task.text} [{priority}] {due}"
-#     )
+for task in tasks:
+    output = stringPrint(output, "")
+    due = f"Due: {task.due_date}" if task.due_date else ""
+    priority = task.priority
+    output = stringPrint(output,
+        f"{str(task.file).split("/")[-1].rstrip(".md")}: "
+        f"{task.text} [{priority}] {due}"
+    )
 
 
 
