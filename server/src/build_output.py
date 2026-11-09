@@ -5,9 +5,6 @@ from collectors.weather_forecast import get_weather_summary
 from dotenv import load_dotenv
 load_dotenv()
 import os
-
-
-
 from datetime import date, time, datetime
 
 
@@ -16,13 +13,9 @@ def stringPrint(output: str, ending: str):
 
 output = ""
 
-
 DATE = date.today()
 
-
-
-
-output = stringPrint(output, DATE.strftime("%A, %B %C"))
+output = stringPrint(output, DATE.strftime("%A, %B %-d"))
 lat = float(os.getenv("LATITUDE"))
 lon = float(os.getenv("LONGITUDE"))
 output = stringPrint(output=output, ending=get_weather_summary(lat, lon))
@@ -59,7 +52,7 @@ for task in tasks:
     priority = task.priority
     output = stringPrint(output,
         f"{str(task.file).split("/")[-1].rstrip(".md")}: "
-        f"{task.text} [{priority}] {due}"
+        f"{task.text}"
     )
 
 

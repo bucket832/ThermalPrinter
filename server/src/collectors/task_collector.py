@@ -12,9 +12,7 @@ Import:
 The script is read-only and uses only the Python standard library.
 """
 
-from __future__ import annotations
 
-import argparse
 import re
 from dataclasses import dataclass
 from datetime import date
@@ -48,6 +46,9 @@ PRIORITY_PATTERN = re.compile("|".join(map(re.escape, PRIORITIES)))
 DUE_PATTERN = re.compile(r"📅\s*(\d{4}-\d{2}-\d{2})(?=\s|$)")
 SCHEDULED_PATTERN = re.compile(r"⏳\s*(\d{4}-\d{2}-\d{2})(?=\s|$)")
 FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})")
+FLAGS = ["🔺", "⏫", "🔼", "🔽", "⏬", "📅",  "⏳", "✅"]
+
+
 
 
 def parse_task(line: str, file: Path, line_number: int, pattern: str) -> Task | None:
@@ -92,6 +93,9 @@ def parse_task(line: str, file: Path, line_number: int, pattern: str) -> Task | 
     for start, end in sorted(metadata_spans, reverse=True):
         text = text[:start] + text[end:]
     text = re.sub(r"\s+", " ", text).strip()
+
+    text = re.split("|".join(FLAGS), text)[0] or ""
+
 
     return Task(
         text=text,
@@ -189,58 +193,4 @@ def collect_tasks(
                 tasks.append(task)
 
     return tasks
-
-
-def cli_date(value: str) -> date:
-    try:
-        return date.fromisoformat(value)
-    except ValueError as error:
-        raise argparse.ArgumentTypeError("dates must use YYYY-MM-DD") from error
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("paths", nargs="+", help="Markdown files or directories")
-    parser.add_argument(
-        "--priority",
-        action="append",
-        choices=("highest", "high", "normal", "low", "lowest"),
-        help="filter by priority; repeat to include more than one",
-    )
-    parser.add_argument("--due-on", type=cli_date)
-    parser.add_argument("--due-before", type=cli_date)
-    parser.add_argument("--due-after", type=cli_date)
-
-    parser.add_argument("--scheduled-on", type=cli_date)
-    parser.add_argument("--scheduled-before", type=cli_date)
-    parser.add_argument("--scheduled-after", type=cli_date)
-
-    args = parser.parse_args()
-
-    try:
-        tasks = collect_tasks(
-            args.paths,
-            priorities=set(args.priority) if args.priority else None,
-            due_on=args.due_on,
-            due_before=args.due_before,
-            due_after=args.due_after,
-
-            scheduled_on=args.scheduled_on,
-            scheduled_before=args.scheduled_before,
-            scheduled_after=args.scheduled_after,
-
-        )
-    except (OSError, UnicodeError) as error:
-        parser.error(str(error))
-
-    for task in tasks:
-        due = f" 📅 {task.due_date}" if task.due_date else ""
-        print(
-            f"{task.file}:{task.line_number}: "
-            f"[{task.priority}]{due} {task.text}"
-        )
-
-
-if __name__ == "__main__":
-    main()
 

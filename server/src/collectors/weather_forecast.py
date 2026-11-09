@@ -72,19 +72,18 @@ def get_weather_summary(latitude, longitude):
     date = daily["time"][0]
 
     condition = WEATHER_CODES.get(code, "Mixed conditions")
-
     parts = [
         f"{condition}",
-        f"high of {high:.0f}-F and low of {low:.0f}-F",
+        f"{high:.0f} F - {low:.0f} F",
     ]
 
     if rain_chance is not None:
-        parts.append(f"{rain_chance:.0f}% chance of precipitation")
+        parts.append(f"{rain_chance:.0f}% chance of rain")
 
-    if precip is not None:
+    if precip is not None and precip > 0.01:
         parts.append(f"{precip:.2f} in total precipitation")
 
-    if wind is not None:
+    if wind is not None and wind > 25:
         parts.append(f"winds up to {wind:.0f} mph")
 
     return "; ".join(parts) + "."
