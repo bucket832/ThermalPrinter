@@ -1,6 +1,7 @@
 secrets.h
 
 server/output/
+server/output/output
 
 # platfor.ini stuff
 thermal_printer/.gitignore
